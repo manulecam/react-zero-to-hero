@@ -25,7 +25,7 @@ Primer mini-proyecto para dominar los conceptos fundamentales de React.
 ## 📝 Tareas de Desarrollo
 
 ### Fase 1: Configuración del Proyecto
-- [ ] Configurar proyecto React con Vite
+- [X] Configurar proyecto React con Vite
 - [ ] Configurar estructura de carpetas
 - [ ] Crear componente principal `TodoApp`
 - [ ] Configurar CSS básico
