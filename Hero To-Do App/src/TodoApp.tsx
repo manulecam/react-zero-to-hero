@@ -29,6 +29,11 @@ export default function TodoApp() {
           className="bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600 dark:hover:bg-blue-700">
           Agregar
         </button>
+        {
+          tasks.map((task, index) => (
+            <li key={index}>{task}</li>
+          ))
+        }
       </div>
     </>
   )
