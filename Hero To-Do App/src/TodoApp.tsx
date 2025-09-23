@@ -1,6 +1,10 @@
+import { useState } from 'react'
+
 import './TodoApp.css'
 
 export default function TodoApp() {
+  const [task, setTask] = useState<string>('');
+  const [tasks, setTasks] = useState<string[]>([]);
 
   return (
     <>
