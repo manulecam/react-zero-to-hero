@@ -31,10 +31,10 @@ Primer mini-proyecto para dominar los conceptos fundamentales de React.
 - [X] Configurar CSS básico
 
 ### Fase 2: Funcionalidad Básica
-- [ ] Crear estado para almacenar tareas (`useState`)
-- [ ] Implementar input controlado para nueva tarea
-- [ ] Implementar función `addTask`
-- [ ] Renderizar lista de tareas
+- [X] Crear estado para almacenar tareas (`useState`)
+- [X] Implementar input controlado para nueva tarea
+- [X] Implementar función `addTask`
+- [X] Renderizar lista de tareas
 
 ### Fase 3: Interactividad
 - [ ] Implementar función `deleteTask`
