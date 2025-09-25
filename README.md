@@ -37,7 +37,7 @@ Primer mini-proyecto para dominar los conceptos fundamentales de React.
 - [X] Renderizar lista de tareas
 
 ### Fase 3: Interactividad
-- [ ] Implementar función `deleteTask`
+- [X] Implementar función `deleteTask`
 - [ ] Implementar función `toggleComplete` (checkmark)
 - [ ] Añadir estilos para tareas completadas (line-through)
 
