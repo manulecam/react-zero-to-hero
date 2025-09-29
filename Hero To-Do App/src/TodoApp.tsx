@@ -5,7 +5,8 @@ import './TodoApp.css'
 type Task = {
   id: string;
   text: string;
-}
+  completed: boolean;
+};
 
 export default function TodoApp() {
   const [task, setTask] = useState<string>('');
@@ -19,10 +20,14 @@ export default function TodoApp() {
     setTasks((prevTasks) => [...prevTasks, task]);
   };
 
+  const handleStatusTask = (task: Task) => (
+    setTasks(tasks.map((t) => t.id === task.id ? {...t, completed: !t.completed } : t))
+  );
+
   const handleAddTask = (task: string) => {
     if (!task.trim()) return;
 
-    const newTask: Task = { id: crypto.randomUUID(), text: task };
+    const newTask: Task = { id: crypto.randomUUID(), text: task, completed: false };
 
     addTask(newTask);
     setTask('');
@@ -62,7 +67,11 @@ export default function TodoApp() {
                   animationFillMode: 'both'
                 }}
               >
-                <span className="flex-1 text-left text-lg">{task.text}</span>
+                <label className="custom-checkbox">
+                  <input type="checkbox" checked={task.completed} onChange={() => handleStatusTask(task)} />
+                  <span className="checkmark"></span>
+                </label>
+                <span className={`flex-1 text-left text-lg ${task.completed ? 'line-through' : ''}`}>{task.text}</span>
                 <div className="flex items-center gap-2">
                   <button
                     className="bg-violet-600 hover:bg-violet-700 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-violet-500/30"
