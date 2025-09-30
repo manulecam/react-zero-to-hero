@@ -47,6 +47,11 @@ export default function TodoApp() {
 
   const handleEditing = (e: React.ChangeEvent<HTMLInputElement>) => setTempTask(e.target.value);
 
+  const cancelEditing = (task: Task) => {
+    setTasks(tasks.map((t) => t.id === task.id ? {...t, isEditing: !t.isEditing } : t));
+    setTempTask('');
+  }
+
   return (
     <div className="p-8 bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 min-h-screen">
       <div className="max-w-2xl mx-auto">
@@ -139,9 +144,9 @@ export default function TodoApp() {
                         ✓
                       </button>
                       <button
-                        onClick={() => deleteTask(task.id)}
+                        onClick={() => cancelEditing(task)}
                         className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-red-500/30"
-                        title="Eliminar tarea"
+                        title="Cancelar edición"
                       >
                         ✕
                       </button>
