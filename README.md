@@ -38,13 +38,13 @@ Primer mini-proyecto para dominar los conceptos fundamentales de React.
 
 ### Fase 3: Interactividad
 - [X] Implementar función `deleteTask`
-- [ ] Implementar función `toggleComplete` (checkmark)
-- [ ] Añadir estilos para tareas completadas (line-through)
+- [X] Implementar función `toggleComplete` (checkmark)
+- [X] Añadir estilos para tareas completadas (line-through)
 
 ### Fase 4: Edición
-- [ ] Implementar modo edición por tarea
-- [ ] Crear función `editTask`
-- [ ] Manejar estado de edición (edit mode)
+- [X] Implementar modo edición por tarea
+- [X] Crear función `editTask`
+- [X] Manejar estado de edición (edit mode)
 
 ### Fase 5: Mejoras UX
 - [ ] Validación de input vacío

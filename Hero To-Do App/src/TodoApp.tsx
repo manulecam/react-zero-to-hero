@@ -5,11 +5,14 @@ import './TodoApp.css'
 type Task = {
   id: string;
   text: string;
-}
+  completed: boolean;
+  isEditing: boolean;
+};
 
 export default function TodoApp() {
   const [task, setTask] = useState<string>('');
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [tempTask, setTempTask] = useState<string>('');
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => setTask(e.target.value);
 
@@ -19,13 +22,34 @@ export default function TodoApp() {
     setTasks((prevTasks) => [...prevTasks, task]);
   };
 
+  const handleStatusTask = (task: Task) => (
+    setTasks(tasks.map((t) => t.id === task.id ? {...t, completed: !t.completed } : t))
+  );
+
   const handleAddTask = (task: string) => {
     if (!task.trim()) return;
 
-    const newTask: Task = { id: crypto.randomUUID(), text: task };
+    const newTask: Task = { id: crypto.randomUUID(), text: task, completed: false, isEditing: false };
 
     addTask(newTask);
     setTask('');
+  }
+
+  const handleOnEdit = (task: Task) => {
+    setTasks(tasks.map((t) => t.id === task.id ? {...t, isEditing: !t.isEditing } : t));
+    setTempTask(task.text)
+  };
+
+  const finishEditing = (task: Task) => {
+    setTasks(tasks.map((t) => t.id === task.id ? {...t, text: tempTask, isEditing: !t.isEditing } : t));
+    setTempTask('');
+  }
+
+  const handleEditing = (e: React.ChangeEvent<HTMLInputElement>) => setTempTask(e.target.value);
+
+  const cancelEditing = (task: Task) => {
+    setTasks(tasks.map((t) => t.id === task.id ? {...t, isEditing: !t.isEditing } : t));
+    setTempTask('');
   }
 
   return (
@@ -53,33 +77,84 @@ export default function TodoApp() {
         
         <ul className='space-y-3'>
           {
-            tasks.map((task, index) => (
-              <li 
-                key={task.id} 
-                className="bg-gray-800/30 backdrop-blur-sm text-gray-100 px-6 py-4 rounded-2xl border border-purple-500/20 shadow-xl hover:shadow-purple-500/20 flex items-center justify-between gap-4 transform transition-all duration-500 hover:scale-[1.02] hover:bg-gray-800/50"
-                style={{
-                  animation: `slideIn 0.3s ease-out ${index * 0.05}s`,
-                  animationFillMode: 'both'
-                }}
-              >
-                <span className="flex-1 text-left text-lg">{task.text}</span>
-                <div className="flex items-center gap-2">
-                  <button
-                    className="bg-violet-600 hover:bg-violet-700 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-violet-500/30"
-                    title="Editar tarea"
+            tasks.map((task, index) => {
+              if (!task.isEditing) {
+                return (
+                  <li 
+                    key={task.id} 
+                    className="bg-gray-800/30 backdrop-blur-sm text-gray-100 px-6 py-4 rounded-2xl border border-purple-500/20 shadow-xl hover:shadow-purple-500/20 flex items-center justify-between gap-4 transform transition-all duration-500 hover:scale-[1.02] hover:bg-gray-800/50"
+                    style={{
+                      animation: `slideIn 0.3s ease-out ${index * 0.05}s`,
+                      animationFillMode: 'both'
+                    }}
                   >
-                    ✏️
-                  </button>
-                  <button
-                    onClick={() => deleteTask(task.id)}
-                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-red-500/30"
-                    title="Eliminar tarea"
+                    <label className="custom-checkbox">
+                      <input type="checkbox" checked={task.completed} onChange={() => handleStatusTask(task)} />
+                      <span className="checkmark"></span>
+                    </label>
+                    <span className={`flex-1 text-left text-lg ${task.completed ? 'line-through' : ''}`}>{task.text}</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        disabled={!!tasks.find((t) => t.isEditing)}
+                        className="bg-violet-600 hover:bg-violet-700 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-violet-500/30"
+                        title="Editar tarea"
+                        onClick={() => handleOnEdit(task)}
+                      >
+                        ✏️
+                      </button>
+                      <button
+                        onClick={() => deleteTask(task.id)}
+                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-red-500/30"
+                        title="Eliminar tarea"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </li>
+                )
+
+              } else {
+                return (
+                  <li 
+                    key={task.id} 
+                    className="bg-gray-800/30 backdrop-blur-sm text-gray-100 px-6 py-4 rounded-2xl border border-purple-500/20 shadow-xl hover:shadow-purple-500/20 flex items-center justify-between gap-4 transform transition-all duration-500 hover:scale-[1.02] hover:bg-gray-800/50"
+                    style={{
+                      animation: `slideIn 0.3s ease-out ${index * 0.05}s`,
+                      animationFillMode: 'both'
+                    }}
                   >
-                    ✕
-                  </button>
-                </div>
-              </li>
-            ))
+                    <label className="custom-checkbox">
+                      <input type="checkbox" checked={task.completed} disabled />
+                      <span className="checkmark opacity-50"></span>
+                    </label>
+                    <input
+                      value={tempTask}
+                      onChange={(e) => handleEditing(e)}
+                      className="flex-1 text-left text-lg border-2 border-purple-500/50 rounded-lg px-3 py-1 bg-gray-800/70 backdrop-blur-sm text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300"
+                      placeholder="Editar tarea..."
+                      onKeyDown={(e) => e.key === 'Enter' && finishEditing(task)}
+                      autoFocus
+                    />
+                    <div className="flex items-center gap-2">
+                      <button
+                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-green-500/30"
+                        title="Confirmar edición"
+                        onClick={() => finishEditing(task)}
+                      >
+                        ✓
+                      </button>
+                      <button
+                        onClick={() => cancelEditing(task)}
+                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-red-500/30"
+                        title="Cancelar edición"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </li>
+                )
+              }
+            })
           }
         </ul>
         
